@@ -2,11 +2,17 @@
 name = "qsyncable-sys"
 version = "0.1.0"
 edition = "2021"
+links = "qsyncable"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [lib]
-crate-type = ["cdylib"]
 
 [dependencies]
-qmetaobject = "0.2.7"
+qmetaobject = "0.2"
+qttypes = "0.2"
+cpp = "0.5"
+
+[build-dependencies]
+cpp_build = "0.5"
+semver = "1"

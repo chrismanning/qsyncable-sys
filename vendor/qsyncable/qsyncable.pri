@@ -1,3 +1,13 @@
+TEMPLATE = lib
+QT += qml
+CONFIG += qmltypes staticlib
+
+QML_IMPORT_NAME = QSyncable
+QML_IMPORT_MAJOR_VERSION = 1
+QML_IMPORT_MINOR_VERSION = 0
+
+TARGET = $$qtLibraryTarget(qsyncable)
+
 INCLUDEPATH += $$PWD
 
 HEADERS += \
@@ -17,7 +27,8 @@ HEADERS += \
     $$PWD/priv/qsalgotypes_p.h \
     $$PWD/priv/qsimmutablewrapper_p.h \
     $$PWD/priv/qsfastdiffrunneralgo_p.h \
-    $$PWD/qsfastdiffrunner.h
+    $$PWD/qsfastdiffrunner.h \
+    $$PWD/qsyncableqmltypes.h
 
 SOURCES += \
     $$PWD/qsdiffrunner.cpp \
