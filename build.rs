@@ -20,16 +20,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 use std::error::Error;
 use std::path::Path;
 use std::process::Command;
+use std::result::Result::*;
 use semver::Version;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let qmake = std::env::var("QMAKE")?;
     let qsyncable_path = Path::new("vendor/qsyncable").canonicalize()?;
-    Command::new(qmake)
-        .arg("qsyncable.pri")
-        .current_dir(&qsyncable_path)
-        .status()?
-        .exit_ok()?;
+    run_qmake(&qsyncable_path)?;
     Command::new("make")
         .current_dir(&qsyncable_path)
         .status()?
@@ -66,4 +62,26 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
 
     Ok(())
+}
+
+fn run_qmake(qsyncable_path: &Path) -> Result<(), Box<dyn Error>> {
+    let run = |qmake: &str| {
+        Command::new(qmake)
+            .arg("qsyncable.pri")
+            .current_dir(&qsyncable_path)
+            .status()?
+            .exit_ok()?;
+        Ok(())
+    };
+    match std::env::var("QMAKE") {
+        Ok(qmake) => return run(&qmake),
+        Err(_) => {
+            for qmake in &["qmake", "qmake6", "qmake-qt5"] {
+                if let Ok(_) = run(&qmake) {
+                    return Ok(());
+                }
+            }
+            return Err(std::io::Error::from(std::io::ErrorKind::NotFound).into());
+        }
+    }
 }
